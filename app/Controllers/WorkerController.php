@@ -40,6 +40,20 @@ final class WorkerController extends BaseController
             email: $this->sanitizeInput(input('email')),
         );
         $this->successResponse($worker->toArray(), 201, 'Worker created successfully');
+    }
+
+    public function update(int $id)
+    {
+        validate([
+            'name' => 'required'
+        ]);
+
+        $worker = $this->workerService->update(
+            id: $id,
+            name: $this->sanitizeInput(input('name'))
+        );
+        $this->successResponse($worker->toArray(), 200, 'Worker updated successfully');
+    }
 
     }
 }
