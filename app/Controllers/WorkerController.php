@@ -55,5 +55,9 @@ final class WorkerController extends BaseController
         $this->successResponse($worker->toArray(), 200, 'Worker updated successfully');
     }
 
+    public function delete(int $id)
+    {
+        $this->workerService->delete($id);
+        $this->successResponse([], 200, 'Worker deleted successfully');
     }
 }
