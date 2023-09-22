@@ -1,9 +1,14 @@
 <?php
 use App\Controllers\WorkerController;
+use App\Handlers\RouterCustomClassLoader;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 
 // API Routes start with /api
 Router::group(['prefix' => '/api'], function () {
+
+    // Custom class loader with DI
+    Router::setCustomClassLoader(new RouterCustomClassLoader());
+
     Router::get('/', function() {
         response()->json([
             'message' => 'Welcome to the api'
