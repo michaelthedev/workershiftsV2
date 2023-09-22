@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use PDO;
+use PDOStatement;
+use Pecee\SimpleRouter\Exceptions\HttpException;
 
 class BaseRepository
 {
@@ -27,5 +29,15 @@ class BaseRepository
     protected function getDb(): PDO
     {
         return $this->db;
+    }
+
+    protected function runQuery(string $query, array $params = []): bool|PDOStatement
+    {
+        $stmt = $this->getDb()->prepare($query);
+        if (!$stmt->execute($params)) {
+            throw new HttpException('Server error', 500);
+        }
+
+        return $stmt;
     }
 }
