@@ -31,8 +31,14 @@ class WorkerRepository extends BaseRepository
         return $query->fetchAll();
     }
 
-    public function create(string $name)
+    public function create(Worker $worker): ?Worker
     {
+        $query = $this->getDb()->prepare("INSERT INTO workers (name) VALUES (:name)");
+        $query->execute([
+            'name' => $worker->getName()
+        ]);
 
+        $worker = $this->get((int) $this->getDb()->lastInsertId());
+        return $worker;
     }
 }
