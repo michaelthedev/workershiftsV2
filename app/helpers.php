@@ -113,12 +113,12 @@ function config(string $configKey, $default = ''): string|array
 {
     $ex = explode('.', $configKey);
     $file = $ex[0];
-    $key = $ex[1];
 
     if (file_exists(CONFIG_PATH . "/$file.php")) {
+        $key = $ex[1];
         $config = require CONFIG_PATH . "/$file.php";
 
-        if (!empty($ex[2])) {
+        if (isset($ex[2])) {
             $value = $config[$key][$ex[2]] ?? '';
         } else {
             $value = $config[$key] ?? '';
