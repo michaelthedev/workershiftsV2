@@ -7,8 +7,21 @@ use App\Entities\Worker;
 
 class WorkerRepository extends BaseRepository
 {
-    public function findById(int $id)
+    public function get(int $id)
     {
+        $query = $this->getDb()->prepare("SELECT * FROM workers WHERE id = :id");
+        $query->execute([
+            'id' => $id
+        ]);
+
+        $data = $query->fetchObject();
+        if ($data) {
+            $worker = new Worker(
+                id: $data->id,
+                name: $data->name
+            );
+        }
+        return $worker ?? null;
     }
 
     public function getAll()
