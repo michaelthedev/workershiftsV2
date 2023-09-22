@@ -24,9 +24,11 @@ class WorkerRepository extends BaseRepository
         return $worker ?? null;
     }
 
-    public function getAll()
+    public function getAll(): array
     {
-
+        $query = $this->getDb()->prepare("SELECT * FROM workers");
+        $query->execute();
+        return $query->fetchAll();
     }
 
     public function create(string $name)
