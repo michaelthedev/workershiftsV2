@@ -16,12 +16,22 @@ require dirname(__FILE__, 2) . '/app/bootstrap.php';
 require ROUTES_PATH . '/api.php';
 
 SimpleRouter::enableMultiRouteRendering(false);
+
+function apiOrPageError(string $message, int $code): void
+{
+    if (request()->getUrl()->contains('/api')) {
+        response()->httpCode($code)->json([
+            'error' => true,
+            'message' => $message
+        ]);
+    } else {
+        //
+    }
+}
 try {
     SimpleRouter::start();
-} catch (NotFoundHttpException) {
-    // Display custom 404 page
-    response()->httpCode(404)->json([
-        'error' => true,
-        'message' => 'Route Not Found'
-    ]);
+} catch (\Pecee\SimpleRouter\Exceptions\HttpException $e) {
+    apiOrPageError($e->getMessage(), $e->getCode());
+} catch (Exception $e) {
+    apiOrPageError("Server Error", 500);
 }
