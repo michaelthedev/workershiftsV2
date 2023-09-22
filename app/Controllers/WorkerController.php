@@ -3,16 +3,15 @@
 namespace App\Controllers;
 
 use App\Entities\Worker;
-use App\Repositories\WorkerRepository;
 use App\Services\WorkerService;
 
-final class WorkerController
+final class WorkerController extends BaseController
 {
     private WorkerService $workerService;
 
-    public function __construct()
+    public function __construct(WorkerService $service)
     {
-        $this->workerService = new WorkerService();
+        $this->workerService = $service;
     }
 
     public function index(): void
