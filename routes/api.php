@@ -19,7 +19,7 @@ Router::group(['prefix' => '/api'], function () {
         Router::get('/', [WorkerController::class, 'index']);
         Router::post('/', [WorkerController::class, 'create']);
 
-        Router::get('/{id}', [WorkerController::class, 'show']);
+        Router::get('/{id}', [WorkerController::class, 'get']);
         Router::put('/{id}', [WorkerController::class, 'update']);
         Router::delete('/{id}', [WorkerController::class, 'delete']);
     });
