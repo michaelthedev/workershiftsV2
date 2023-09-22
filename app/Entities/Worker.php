@@ -8,13 +8,20 @@ final class Worker
 {
     private int $id;
     private string $name;
+    private string $email;
     private array $shifts = [];
 
-    public function __construct(int $id = null, string $name = null, array $shifts = [])
+    public function __construct()
+    {}
+
+    public function setId(int $id): void
     {
         $this->id = $id;
-        $this->name = $name;
-        $this->shifts = $shifts;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function setName(string $name): void
@@ -25,6 +32,16 @@ final class Worker
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 
     public function addShift($shift): void
