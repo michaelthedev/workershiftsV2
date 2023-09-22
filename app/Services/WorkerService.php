@@ -6,46 +6,78 @@ namespace App\Services;
 
 use App\Entities\Worker;
 use App\Repositories\WorkerRepository;
+use Pecee\SimpleRouter\Exceptions\HttpException;
 
 final class WorkerService
 {
     private WorkerRepository $workerRepository;
-    private RedisService $redisService;
 
-    public function __construct()
+    public function __construct(WorkerRepository $repository)
     {
-        $this->redisService = new RedisService();
-        $this->workerRepository = new WorkerRepository();
+        $this->workerRepository = $repository;
     }
 
     public function getAll(): array
     {
-        if ($this->redisService->isEnabled) {
-            return $this->getAllFromCacheOrDb();
-        } else {
-            return $this->workerRepository->getAll();
-        }
+        return $this->workerRepository->getAll();
     }
 
-    private function getAllFromCacheOrDb(): array
+    public function get(int $id): Worker
     {
-        if (!$this->redisService->has('workers::all')) {
-            $workers = $this->workerRepository->getAll();
-            $this->redisService->set('workers::all', json_encode($workers));
+        $worker = $this->workerRepository->get($id);
+        if (!$worker) {
+            throw new HttpException('Worker not found', 404);
         }
 
-        return json_decode($this->redisService->get('workers::all'));
+        return $worker;
     }
 
-    public function create(string $name): ?Worker
+    /**
+     * @throws HttpException
+     */
+    public function create(string $name, string $email): ?Worker
     {
+        // check if worker email already exists
+        if ($this->workerRepository->emailExists($email)) {
+            throw new HttpException('Worker already exists', 400);
+        }
+
         $worker = new Worker();
         $worker->setName($name);
+        $worker->setEmail($email);
 
         $workerId = $this->workerRepository->create($worker);
-        if ($workerId) {
-            $worker->setId($workerId);
-            return $worker;
+        if (!$workerId) {
+            throw new HttpException('Failed to create worker', 500);
+        }
+
+        $worker->setId($workerId);
+        return $worker;
+    }
+
+    public function update(int $id, string $name): ?Worker
+    {
+        $worker = $this->workerRepository->get($id);
+        if (!$worker) {
+            throw new HttpException('Worker not found', 404);
+        }
+
+        $worker->setName($name);
+        if (!$this->workerRepository->update($worker)) {
+            throw new HttpException('Failed to update worker', 500);
+        }
+
+        return $worker;
+    }
+
+    public function delete(int $id): void
+    {
+        if (!$this->workerRepository->exists($id)) {
+            throw new HttpException('Worker not found', 404);
+        }
+
+        if (!$this->workerRepository->delete($id)) {
+            throw new HttpException('Failed to delete worker', 500);
         }
     }
 }
