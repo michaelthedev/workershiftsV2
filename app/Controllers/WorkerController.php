@@ -39,20 +39,7 @@ final class WorkerController extends BaseController
             name: $this->sanitizeInput(input('name')),
             email: $this->sanitizeInput(input('email')),
         );
+        $this->successResponse($worker->toArray(), 201, 'Worker created successfully');
 
-        var_dump($worker);
-        if ($worker) {
-            response()->json([
-                'error' => false,
-                'message' => 'success',
-                'data' => $worker->toArray()
-            ]);
-        } else {
-            response()->json([
-                'error' => true,
-                'message' => 'Failed to create worker',
-                'data' => []
-            ]);
-        }
     }
 }
