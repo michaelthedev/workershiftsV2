@@ -2,17 +2,17 @@
 
 namespace App\Controllers;
 
-use App\Models\Worker;
-use App\Repositories\Interfaces\WorkerRepositoryInterface;
+use App\Entities\Worker;
 use App\Repositories\WorkerRepository;
+use App\Services\WorkerService;
 
 final class WorkerController
 {
-    private WorkerRepositoryInterface $workerRepository;
+    private WorkerService $workerService;
 
     public function __construct()
     {
-        $this->workerRepository = new WorkerRepository();
+        $this->workerService = new WorkerService();
     }
 
     public function index(): void
@@ -20,7 +20,7 @@ final class WorkerController
         response()->json([
             'error' => false,
             'message' => 'success',
-            'data' => $this->workerRepository->getAll()
+            'data' => $this->workerService->getAll()
         ]);
     }
 
@@ -30,14 +30,23 @@ final class WorkerController
             'name' => 'required'
         ]);
 
-        $name = input('name');
-        $worker = new Worker();
-        $worker->setName($name);
+        $worker = $this->workerService->create(
+            name: input('name')
+        );
 
-        response()->json([
-            'error' => false,
-            'message' => 'success',
-            'data' => $worker
-        ]);
+        var_dump($worker);
+        if ($worker) {
+            response()->json([
+                'error' => false,
+                'message' => 'success',
+                'data' => $worker->toArray()
+            ]);
+        } else {
+            response()->json([
+                'error' => true,
+                'message' => 'Failed to create worker',
+                'data' => []
+            ]);
+        }
     }
 }
