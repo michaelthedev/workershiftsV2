@@ -16,11 +16,16 @@ final class WorkerController extends BaseController
 
     public function index(): void
     {
-        response()->json([
-            'error' => false,
-            'message' => 'success',
-            'data' => $this->workerService->getAll()
-        ]);
+        $this->successResponse(
+            $this->workerService->getAll()
+        );
+    }
+
+    public function get(int $id): void
+    {
+        $this->successResponse(
+            $this->workerService->get($id)->toArray()
+        );
     }
 
     public function create()
