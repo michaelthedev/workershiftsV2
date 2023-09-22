@@ -4,41 +4,96 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Entities\Worker;
+use Pecee\SimpleRouter\Exceptions\HttpException;
 
 class WorkerRepository extends BaseRepository
 {
     public function get(int $id)
     {
-        $query = $this->getDb()->prepare("SELECT * FROM workers WHERE id = :id");
-        $query->execute([
-            'id' => $id
-        ]);
+        $query = $this->runQuery(
+            query: "SELECT * FROM workers WHERE id = :id",
+            params: [
+                'id' => $id
+            ]
+        );
 
         $data = $query->fetchObject();
-        if ($data) {
-            $worker = new Worker(
-                id: $data->id,
-                name: $data->name
-            );
-        }
-        return $worker ?? null;
+        if (!$data) return null;
+
+        $worker = new Worker();
+        $worker->setId((int) $data->id);
+        $worker->setName($data->name);
+        $worker->setEmail($data->email);
+        return $worker;
+    }
+
+    public function exists(int $id): bool
+    {
+        $query = $this->runQuery(
+            query: "SELECT * FROM workers WHERE id = :id",
+            params: [
+                'id' => $id
+            ]
+        );
+        return $query->rowCount() > 0;
+    }
+
+    public function emailExists(string $email): bool
+    {
+        $query = $this->runQuery(
+            query: "SELECT * FROM workers WHERE email = :email",
+            params: [
+                'email' => $email
+            ]
+        );
+        return $query->rowCount() > 0;
     }
 
     public function getAll(): array
     {
-        $query = $this->getDb()->prepare("SELECT * FROM workers");
-        $query->execute();
+        $query = $this->runQuery(
+            query: "SELECT * FROM workers"
+        );
         return $query->fetchAll();
     }
 
-    public function create(Worker $worker): ?Worker
+    public function create(Worker $worker): ?int
     {
-        $query = $this->getDb()->prepare("INSERT INTO workers (name) VALUES (:name)");
-        $query->execute([
-            'name' => $worker->getName()
-        ]);
+        $query = $this->runQuery(
+            query: "INSERT INTO workers (name, email) VALUES (:name, :email)",
+            params: [
+                'name' => $worker->getName(),
+                'email' => $worker->getEmail()
+            ]
+        );
 
-        $worker = $this->get((int) $this->getDb()->lastInsertId());
-        return $worker;
+        return ($query->rowCount() > 0)
+            ? (int) $this->getDb()->lastInsertId()
+            : null;
+    }
+
+    public function update(Worker $worker): bool
+    {
+        $query = $this->runQuery(
+            query: "UPDATE workers SET name = :name WHERE id = :id",
+            params: [
+                'id' => $worker->getId(),
+                'name' => $worker->getName()
+            ]
+        );
+
+        return $query->rowCount() > 0;
+    }
+
+    public function delete(int $id): bool
+    {
+        $query = $this->runQuery(
+            query: "DELETE FROM workers WHERE id = :id",
+            params: [
+                'id' => $id
+            ]
+        );
+
+        return $query->rowCount() > 0;
     }
 }
