@@ -5,7 +5,7 @@ namespace App\Repositories;
 
 use App\Entities\Worker;
 
-class WorkerRepository implements WorkerRepositoryInterface
+class WorkerRepository extends BaseRepository
 {
     public function findById(int $id)
     {
