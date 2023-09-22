@@ -31,11 +31,13 @@ final class WorkerController extends BaseController
     public function create()
     {
         validate([
-            'name' => 'required'
+            'name' => 'required',
+            'email' => 'required|email'
         ]);
 
         $worker = $this->workerService->create(
-            name: input('name')
+            name: $this->sanitizeInput(input('name')),
+            email: $this->sanitizeInput(input('email')),
         );
 
         var_dump($worker);
