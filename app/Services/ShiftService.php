@@ -48,6 +48,10 @@ final class ShiftService
 
         $start = DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $start);
 
+        if (!$this->isValidShift($start)) {
+            throw new HttpException('Allowed shift ranges are 0-8, 8-16, 16-24');
+        }
+
         if ($this->isShiftConflict($workerId, $start)) {
             throw new HttpException('Worker already has a shift on selected date');
         }
@@ -73,6 +77,10 @@ final class ShiftService
 
         $start = DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $start);
 
+        if (!$this->isValidShift($start)) {
+            throw new HttpException('Allowed shift ranges are 0-8, 8-16, 16-24');
+        }
+
         if ($this->isShiftConflict($workerId, $start)) {
             throw new HttpException('Worker already has a shift on selected date');
         }
@@ -94,6 +102,12 @@ final class ShiftService
             $this->shiftRepository
                 ->findByWorkerAndDate($workerId, $date)
         );
+    }
+
+    private function isValidShift(DateTimeImmutable $start): bool
+    {
+        $hour = (int) $start->format('H');
+        return in_array($hour, [0, 8, 16]);
     }
 
     public function delete(int $id): void
