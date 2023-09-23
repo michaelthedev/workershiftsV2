@@ -20,4 +20,4 @@
 - DELETE /shifts/:id Delete a shift by id
 
 ### Postman documentation
-[Documentation]()
+[Documentation](https://documenter.getpostman.com/view/10657913/2s9YJW4kis)
