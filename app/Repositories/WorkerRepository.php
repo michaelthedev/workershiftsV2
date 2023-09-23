@@ -1,12 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repositories;
 
 use App\Entities\Worker;
-use Pecee\SimpleRouter\Exceptions\HttpException;
 
-class WorkerRepository extends BaseRepository
+final class WorkerRepository extends BaseRepository
 {
     public function get(int $id): ?Worker
     {
@@ -18,7 +18,9 @@ class WorkerRepository extends BaseRepository
         );
 
         $data = $query->fetchObject();
-        if (!$data) return null;
+        if (!$data) {
+            return null;
+        }
 
         $worker = new Worker();
         $worker->setId((int) $data->id);
