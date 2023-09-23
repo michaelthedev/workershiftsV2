@@ -38,7 +38,7 @@
     ],
     "coverage": "phpunit --coverage-html=coverage --coverage-text",
     "database": "php extras/bin/restart-db.php",
-    "phpstan": "./vendor/bin/phpstan analyse src tests --level=max",
+    "phpstan": "./vendor/bin/phpstan analyse app tests --level=max",
     "phpinsights": "./vendor/bin/phpinsights -v",
     "start": "php -S localhost:8080 -t public public/index.php",
     "test": "phpunit"
