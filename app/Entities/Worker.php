@@ -44,13 +44,22 @@ final class Worker
         return $this->email;
     }
 
-    public function addShift($shift): void
+    public function setShifts(array $shift): void
     {
-        $this->shifts[] = $shift;
+        $this->shifts = $shift;
+    }
+
+    public function getShifts(): array
+    {
+        return $this->shifts;
     }
 
     public function toArray(): array
     {
-        return get_object_vars($this);
+        return [
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'shifts' => $this->getShifts()
+        ];
     }
 }
