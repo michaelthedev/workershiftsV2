@@ -1,5 +1,8 @@
 # Workers Shift REST API
 
+## About
+Built to closely follow the SOLID Design principles using a Service Layer and Repository Pattern
+
 ### Routes
 == Workers ==
 - GET /workers Get all workers
