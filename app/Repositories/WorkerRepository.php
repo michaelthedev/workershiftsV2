@@ -8,7 +8,7 @@ use Pecee\SimpleRouter\Exceptions\HttpException;
 
 class WorkerRepository extends BaseRepository
 {
-    public function get(int $id)
+    public function get(int $id): ?Worker
     {
         $query = $this->runQuery(
             query: "SELECT * FROM workers WHERE id = :id",

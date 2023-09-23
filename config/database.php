@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'host' => $_SERVER['DB_HOST'],
     'name' => $_SERVER['DB_NAME'],

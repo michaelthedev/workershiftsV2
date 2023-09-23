@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
 use App\Entities\Worker;
@@ -28,7 +30,7 @@ final class WorkerController extends BaseController
         );
     }
 
-    public function create()
+    public function create(): void
     {
         validate([
             'name' => 'required',
@@ -42,7 +44,7 @@ final class WorkerController extends BaseController
         $this->successResponse($worker->toArray(), 201, 'Worker created successfully');
     }
 
-    public function update(int $id)
+    public function update(int $id): void
     {
         validate([
             'name' => 'required'

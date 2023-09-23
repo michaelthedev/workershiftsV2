@@ -1,6 +1,7 @@
 <?php
 
-use App\Exceptions\ValidationException;
+declare(strict_types=1);
+
 use Pecee\Http\Input\InputHandler;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 use Pecee\Http\Url;
@@ -26,22 +27,17 @@ use Rakit\Validation\Validator;
  * @return Url
  * @throws InvalidArgumentException
  */
-function url(?string $name = null, array|string $parameters = null, ?array $getParams = null): Url
+function url(?string $name = null, array|string|null $parameters = null, ?array $getParams = null): Url
 {
     return Router::getUrl($name, $parameters, $getParams);
 }
 
-/**
- * @return Response
- */
 function response(): Response
 {
     return Router::response();
 }
 
-/**
- * @return Request
- */
+
 function request(): Request
 {
     return Router::request();
@@ -50,11 +46,11 @@ function request(): Request
 /**
  * Get input class
  * @param string|null $index Parameter index name
- * @param mixed|null $defaultValue Default return value
+ * @param string|int|null $defaultValue Default return value
  * @param array ...$methods Default methods
- * @return InputHandler|array|string|null
+ * @return array|string|InputHandler|int|null
  */
-function input(string $index = null, mixed $defaultValue = null, ...$methods): array|string|InputHandler|null
+function input(?string $index = null, string|int|null $defaultValue = null, array ...$methods): array|string|InputHandler|null|int
 {
     if ($index !== null) {
         return request()->getInputHandler()->value($index, $defaultValue, ...$methods);
@@ -63,10 +59,6 @@ function input(string $index = null, mixed $defaultValue = null, ...$methods): a
     return request()->getInputHandler();
 }
 
-/**
- * @param string $url
- * @param int|null $code
- */
 function redirect(string $url, ?int $code = null): void
 {
     if ($code !== null) {
@@ -88,7 +80,7 @@ function csrf_token(): ?string
 
 function validate(array $rules, ?array $data = null): void
 {
-    $validator = new Validator;
+    $validator = new Validator();
     $validation = $validator->validate($data ?? input()->getOriginalPost(), $rules, [
         'required' => ':attribute is required',
         'email' => ':attribute must be a valid email address',

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 // +----------------------------------------------------+
 // | @author        : Michael Arawole (Logad Networks)
 // | @author_url    : https://www.logad.net
@@ -6,7 +9,6 @@
 // | @date          : 10 Sep, 2023 12:11 PM
 // +----------------------------------------------------+
 
-use Pecee\SimpleRouter\Exceptions\NotFoundHttpException;
 use Pecee\SimpleRouter\SimpleRouter;
 
 // Include the composer autoloader
@@ -24,8 +26,6 @@ function apiOrPageError(string $message, int $code): void
             'error' => true,
             'message' => $message
         ]);
-    } else {
-        //
     }
 }
 try {

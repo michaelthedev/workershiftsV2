@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Constants
 define("BASE_PATH", dirname(__FILE__, 2));
 
