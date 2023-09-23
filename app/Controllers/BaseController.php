@@ -6,9 +6,11 @@ namespace App\Controllers;
 
 class BaseController
 {
-    final protected function sanitizeInput(string $value): string
+    final protected function sanitizeInput(string|int $value): string|int
     {
-        return htmlspecialchars(trim($value));
+        return (is_int($value))
+            ? $value
+            : htmlspecialchars(trim($value));
     }
 
     final protected function successResponse(array $data, int $statusCode = 200, string $message = 'success'): void
