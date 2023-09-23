@@ -58,6 +58,7 @@ final class Worker
     {
         return [
             'id' => $this->getId(),
+            'name' => $this->getName(),
             'email' => $this->getEmail(),
             'shifts' => $this->getShifts()
         ];
