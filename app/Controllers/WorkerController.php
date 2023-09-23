@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Entities\Worker;
 use App\Services\WorkerService;
 
 final class WorkerController extends BaseController
@@ -41,7 +40,11 @@ final class WorkerController extends BaseController
             name: $this->sanitizeInput(input('name')),
             email: $this->sanitizeInput(input('email')),
         );
-        $this->successResponse($worker->toArray(), 201, 'Worker created successfully');
+        $this->successResponse(
+            $worker->toArray(),
+            201,
+            'Worker created successfully'
+        );
     }
 
     public function update(int $id): void
@@ -54,12 +57,20 @@ final class WorkerController extends BaseController
             id: $id,
             name: $this->sanitizeInput(input('name'))
         );
-        $this->successResponse($worker->toArray(), 200, 'Worker updated successfully');
+        $this->successResponse(
+            $worker->toArray(),
+            200,
+            'Worker updated successfully'
+        );
     }
 
-    public function delete(int $id)
+    public function delete(int $id): void
     {
         $this->workerService->delete($id);
-        $this->successResponse([], 200, 'Worker deleted successfully');
+        $this->successResponse(
+            [],
+            200,
+            'Worker deleted successfully'
+        );
     }
 }
