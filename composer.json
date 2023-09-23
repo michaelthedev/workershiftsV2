@@ -1,6 +1,6 @@
 {
-  "name": "michaelthedev/watchpilot-backend",
-  "description": "Backend for WatchPilot",
+  "name": "michaelthedev/workershiftsV2",
+  "description": "WORKER SHIFT REST API",
   "minimum-stability": "stable",
   "authors": [
     {
