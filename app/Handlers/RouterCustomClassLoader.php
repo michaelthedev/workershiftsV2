@@ -6,7 +6,6 @@ namespace App\Handlers;
 
 use DI\ContainerBuilder;
 use Pecee\SimpleRouter\ClassLoader\IClassLoader;
-use Pecee\SimpleRouter\Exceptions\ClassNotFoundHttpException;
 use Pecee\SimpleRouter\Exceptions\NotFoundHttpException;
 
 class RouterCustomClassLoader implements IClassLoader
@@ -32,13 +31,20 @@ class RouterCustomClassLoader implements IClassLoader
     public function loadClass(string $class)
     {
         if (class_exists($class) === false) {
-            throw new NotFoundHttpException(sprintf('Class "%s" does not exist', $class), 404);
+            throw new NotFoundHttpException(
+                sprintf('Class "%s" does not exist', $class),
+                404
+            );
         }
 
         try {
             return $this->container->get($class);
         } catch (\Exception $e) {
-            throw new NotFoundHttpException($e->getMessage(), (int)$e->getCode(), $e->getPrevious());
+            throw new NotFoundHttpException(
+                $e->getMessage(),
+                (int) $e->getCode(),
+                $e->getPrevious()
+            );
         }
     }
 
@@ -51,7 +57,10 @@ class RouterCustomClassLoader implements IClassLoader
      */
     public function loadClassMethod($class, string $method, array $parameters)
     {
-        return $this->container->call([$class, $method], $parameters);
+        return $this->container->call(
+            [$class, $method],
+            $parameters
+        );
     }
 
     /**
@@ -66,7 +75,11 @@ class RouterCustomClassLoader implements IClassLoader
         try {
             return $this->container->call($closure, $parameters);
         } catch (\Exception $e) {
-            throw new NotFoundHttpException($e->getMessage(), (int)$e->getCode(), $e->getPrevious());
+            throw new NotFoundHttpException(
+                $e->getMessage(),
+                (int) $e->getCode(),
+                $e->getPrevious()
+            );
         }
     }
 }
