@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entities\Worker;
+use App\Repositories\ShiftRepository;
 use App\Repositories\WorkerRepository;
 use Pecee\SimpleRouter\Exceptions\HttpException;
 
 final class WorkerService
 {
     private WorkerRepository $workerRepository;
+    private ShiftRepository $shiftRepository;
 
-    public function __construct(WorkerRepository $repository)
+    public function __construct(WorkerRepository $workerRepository, ShiftRepository $shiftRepository)
     {
-        $this->workerRepository = $repository;
+        $this->workerRepository = $workerRepository;
+        $this->shiftRepository = $shiftRepository;
     }
 
     public function getAll(): array
@@ -28,6 +31,10 @@ final class WorkerService
         if (!$worker) {
             throw new HttpException('Worker not found', 404);
         }
+
+        $worker->setShifts(
+            $this->shiftRepository->findByWorker($worker->getId())
+        );
 
         return $worker;
     }
